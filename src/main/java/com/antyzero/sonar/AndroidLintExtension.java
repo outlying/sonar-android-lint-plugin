@@ -28,28 +28,13 @@ public class AndroidLintExtension implements Sensor {
 
     @Override
     public boolean shouldExecuteOnProject(Project project) {
-
-
-        FilePredicates predicates = fileSystem.predicates();
-
-
-        // Detect Java files
-
-        boolean hasJavaMainFiles = hasJavaFiles();
-
-        // Detect AndroidManifest file
-
-        predicates.hasType(InputFile.Type.MAIN);
-
-        boolean hasAndroidManifest = false;
-
-        return hasJavaMainFiles;
+        return hasJavaFiles() && hasAndroidManifest();
     }
 
     /**
      * Detects Java files
      *
-     * @return
+     * @return {@code true} if Java files are present
      */
     boolean hasJavaFiles() {
 
@@ -61,5 +46,17 @@ public class AndroidLintExtension implements Sensor {
                         predicates.hasType(InputFile.Type.MAIN)));
 
         return Iterators.size(files.iterator()) > 0;
+    }
+
+    /**
+     * Detects AndroidManifest.xml file
+     *
+     * @return {@code true} if file is present
+     */
+    boolean hasAndroidManifest(){
+
+        FilePredicates predicates = fileSystem.predicates();
+
+        throw new UnsupportedOperationException("Not yet implmented");
     }
 }

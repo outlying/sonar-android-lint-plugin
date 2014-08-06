@@ -4,6 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 
+import java.io.File;
+
 import static org.fest.assertions.api.Assertions.assertThat;
 
 public class AndroidLintExtensionTest {
@@ -13,12 +15,10 @@ public class AndroidLintExtensionTest {
     @Before
     public void setUp() throws Exception {
 
-        DefaultFileSystem fileSystem = new DefaultFileSystem();
-
         // "/test-project/src/main"
-        getClass().getResource("/test-project");
+        File baseDir = new File(getClass().getResource("/test-project").toURI());
 
-        //fileSystem.setBaseDir(null);
+        DefaultFileSystem fileSystem = new DefaultFileSystem().setBaseDir(baseDir);
 
         androidLintExtension = new AndroidLintExtension(fileSystem);
     }
