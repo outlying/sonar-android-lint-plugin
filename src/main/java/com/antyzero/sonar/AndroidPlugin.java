@@ -13,8 +13,8 @@ public class AndroidPlugin extends SonarPlugin {
     /**
      * List of extensions
      */
-    private static final ImmutableList<Class<AndroidLintExtension>> EXTENSIONS = ImmutableList.of(
-            AndroidLintExtension.class
+    private static final ImmutableList<Class<AndroidLintSensor>> EXTENSIONS = ImmutableList.of(
+            AndroidLintSensor.class
     );
 
     @Override

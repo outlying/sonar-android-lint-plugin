@@ -1,23 +1,30 @@
 package com.antyzero.sonar;
 
+import com.android.SdkConstants;
 import com.google.common.collect.Iterators;
+import org.sonar.api.Extension;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
+import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FilePredicates;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.resources.Project;
 
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
+
 /**
  * ...
  */
-public class AndroidLintExtension implements Sensor {
+public class AndroidLintSensor implements Sensor {
 
     private static final String LANGUAGE_JAVA = "java";
+    public static final String PATTERN_ANDROID_MANIFEST = ".*" + Pattern.quote(SdkConstants.ANDROID_MANIFEST_XML);
 
     private final FileSystem fileSystem;
 
-    public AndroidLintExtension(FileSystem fileSystem) {
+    public AndroidLintSensor(FileSystem fileSystem) {
         this.fileSystem = fileSystem;
     }
 
@@ -53,10 +60,22 @@ public class AndroidLintExtension implements Sensor {
      *
      * @return {@code true} if file is present
      */
-    boolean hasAndroidManifest(){
+    boolean hasAndroidManifest() {
 
         FilePredicates predicates = fileSystem.predicates();
 
-        throw new UnsupportedOperationException("Not yet implmented");
+        boolean result = false;
+
+        try {
+
+            FilePredicate predicate = predicates.matchesPathPattern(PATTERN_ANDROID_MANIFEST);
+
+            result = fileSystem.inputFile(predicate) != null;
+
+        } catch (IllegalArgumentException e) {
+            // TODO add logger, too many AndroidManifest files found
+        }
+
+        return result;
     }
 }
