@@ -29,16 +29,13 @@ public class AndroidLintExtension implements Sensor {
     @Override
     public boolean shouldExecuteOnProject(Project project) {
 
+
         FilePredicates predicates = fileSystem.predicates();
+
 
         // Detect Java files
 
-        Iterable<InputFile> files = fileSystem.inputFiles(
-                predicates.and(
-                        predicates.hasLanguage(LANGUAGE_JAVA),
-                        predicates.hasType(InputFile.Type.MAIN)));
-
-        boolean hasJavaMainFiles = Iterators.size(files.iterator()) > 0;
+        boolean hasJavaMainFiles = hasJavaFiles();
 
         // Detect AndroidManifest file
 
@@ -47,5 +44,22 @@ public class AndroidLintExtension implements Sensor {
         boolean hasAndroidManifest = false;
 
         return hasJavaMainFiles;
+    }
+
+    /**
+     * Detects Java files
+     *
+     * @return
+     */
+    boolean hasJavaFiles() {
+
+        FilePredicates predicates = fileSystem.predicates();
+
+        Iterable<InputFile> files = fileSystem.inputFiles(
+                predicates.and(
+                        predicates.hasLanguage(LANGUAGE_JAVA),
+                        predicates.hasType(InputFile.Type.MAIN)));
+
+        return Iterators.size(files.iterator()) > 0;
     }
 }
