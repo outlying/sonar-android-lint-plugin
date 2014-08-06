@@ -2,7 +2,6 @@ package com.antyzero.sonar;
 
 import com.android.SdkConstants;
 import com.google.common.collect.Iterators;
-import org.sonar.api.Extension;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FilePredicate;
@@ -11,7 +10,7 @@ import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.resources.Project;
 
-import java.util.logging.Logger;
+import java.io.File;
 import java.util.regex.Pattern;
 
 /**
@@ -20,19 +19,28 @@ import java.util.regex.Pattern;
 public class AndroidLintSensor implements Sensor {
 
     private static final String LANGUAGE_JAVA = "java";
-    public static final String PATTERN_ANDROID_MANIFEST = ".*" + Pattern.quote(SdkConstants.ANDROID_MANIFEST_XML);
+    private static final String PATTERN_ANDROID_MANIFEST = ".*" + Pattern.quote(SdkConstants.ANDROID_MANIFEST_XML);
 
     private final FileSystem fileSystem;
 
+    /**
+     *
+     */
     public AndroidLintSensor(FileSystem fileSystem) {
         this.fileSystem = fileSystem;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void analyse(Project project, SensorContext sensorContext) {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean shouldExecuteOnProject(Project project) {
         return hasJavaFiles() && hasAndroidManifest();
@@ -62,20 +70,16 @@ public class AndroidLintSensor implements Sensor {
      */
     boolean hasAndroidManifest() {
 
-        FilePredicates predicates = fileSystem.predicates();
+        File pathAndroidManifest = new File(fileSystem.baseDir(), SdkConstants.ANDROID_MANIFEST_XML);
 
-        boolean result = false;
-
-        try {
-
-            FilePredicate predicate = predicates.matchesPathPattern(PATTERN_ANDROID_MANIFEST);
-
-            result = fileSystem.inputFile(predicate) != null;
-
-        } catch (IllegalArgumentException e) {
-            // TODO add logger, too many AndroidManifest files found
+        if (pathAndroidManifest.exists()) {
+            return true;
         }
 
-        return result;
+        FilePredicates predicates = fileSystem.predicates();
+
+        FilePredicate predicate = predicates.matchesPathPattern(PATTERN_ANDROID_MANIFEST);
+
+        return fileSystem.hasFiles(predicate);
     }
 }
