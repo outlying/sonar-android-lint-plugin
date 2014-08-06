@@ -6,13 +6,30 @@ import com.android.tools.lint.client.api.JavaParser;
 import com.android.tools.lint.client.api.LintClient;
 import com.android.tools.lint.client.api.XmlParser;
 import com.android.tools.lint.detector.api.*;
+import org.sonar.api.BatchExtension;
+import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 
 import java.io.File;
 
 /**
- * Created by tornax on 06.08.14.
+ *
  */
-public class AndroidSonarLintClient extends LintClient {
+public class LintSonarClient extends LintClient implements BatchExtension {
+
+    private final DefaultFileSystem fileSystem;
+    private final Project project;
+
+    public LintSonarClient(DefaultFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
+
+        File baseDir = fileSystem.baseDir();
+
+        project = Project.create(this, baseDir, baseDir);
+    }
+
+    public Project getProject() {
+        return project;
+    }
 
     @Override
     public void report(@NonNull Context context, @NonNull Issue issue, @NonNull Severity severity, @Nullable Location location, @NonNull String message, @Nullable Object data) {
