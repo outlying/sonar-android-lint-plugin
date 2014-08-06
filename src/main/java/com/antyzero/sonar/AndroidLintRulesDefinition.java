@@ -18,5 +18,6 @@ public class AndroidLintRulesDefinition implements RulesDefinition {
                 .setName("Android Lint Analyzer");
 
 
+
     }
 }
