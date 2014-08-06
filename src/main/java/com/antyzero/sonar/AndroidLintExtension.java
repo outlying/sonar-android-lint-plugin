@@ -31,12 +31,20 @@ public class AndroidLintExtension implements Sensor {
 
         FilePredicates predicates = fileSystem.predicates();
 
+        // Detect Java files
+
         Iterable<InputFile> files = fileSystem.inputFiles(
                 predicates.and(
                         predicates.hasLanguage(LANGUAGE_JAVA),
                         predicates.hasType(InputFile.Type.MAIN)));
 
         boolean hasJavaMainFiles = Iterators.size(files.iterator()) > 0;
+
+        // Detect AndroidManifest file
+
+        predicates.hasType(InputFile.Type.MAIN);
+
+        boolean hasAndroidManifest = false;
 
         return hasJavaMainFiles;
     }
